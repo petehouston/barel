@@ -39,7 +39,9 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapWebRoutes($router);
 
-        //
+        $this->mapAdminRoutes($router);
+
+        $this->mapUserRoutes($router);
     }
 
     /**
@@ -53,9 +55,31 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(Router $router)
     {
         $router->group([
-            'namespace' => $this->namespace, 'middleware' => 'web',
+            'namespace' => $this->namespace.'\Web',
+            'middleware' => 'web',
         ], function ($router) {
-            require app_path('Http/routes.php');
+            require base_path('routes/web.php');
+        });
+    }
+
+    protected function mapAdminRoutes(Router $router)
+    {
+        $router->group([
+            'namespace' => $this->namespace.'\Admin',
+            'middleware' => 'web',
+            'prefix' => 'admin'
+        ], function ($router) {
+            require base_path('routes/admin.php');
+        });
+    }
+
+    public function mapUserRoutes(Router $router)
+    {
+        $router->group([
+            'namespace' => $this->namespace.'\Users',
+            'middleware' => 'web',
+        ], function ($router) {
+            require base_path('routes/users.php');
         });
     }
 }
